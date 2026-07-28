@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import client, { formatApiError, API } from "../lib/api";
 import { PageContainer, PageHeader, EmptyState } from "../components/Shared";
 import { Button } from "../components/ui/button";
@@ -171,41 +172,45 @@ export default function Journal() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {entries.map((j) => (
-            <div key={j.id} className="border border-border rounded-md bg-card/60 hover:border-primary/40 transition-colors overflow-hidden" data-testid={`journal-card-${j.id}`}>
-              {j.photos && j.photos.length > 0 && (
-                <div className={`grid ${j.photos.length === 1 ? "grid-cols-1" : j.photos.length === 2 ? "grid-cols-2" : "grid-cols-3"} gap-0.5 bg-border`}>
-                  {j.photos.slice(0, 3).map((src, i) => (
-                    <img key={i} src={src} alt="" className="w-full h-40 md:h-48 object-cover" />
-                  ))}
-                </div>
-              )}
-              <div className="p-5">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-2">
-                      <NotebookIcon size={16} weight="duotone" className="text-primary" />
-                      <div className="overline text-[10px]">{j.date} · {j.location || "—"}</div>
-                      {j.ai_generated && (
-                        <span className="inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/30">
-                          <SparkleIcon size={10} weight="fill" /> AI
-                        </span>
-                      )}
-                    </div>
-                    <div className="font-display text-xl font-bold leading-tight">{j.title}</div>
+            <div key={j.id} className="relative border border-border rounded-md bg-card/60 hover:border-primary/40 transition-colors overflow-hidden group" data-testid={`journal-card-${j.id}`}>
+              <button
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); del(j.id); }}
+                data-testid={`journal-delete-${j.id}`}
+                aria-label="Delete entry"
+                className="absolute top-3 right-3 z-10 p-1.5 rounded-md bg-background/80 backdrop-blur text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <TrashIcon size={14} />
+              </button>
+              <Link to={`/journal/${j.id}`} className="block" data-testid={`journal-open-${j.id}`}>
+                {j.photos && j.photos.length > 0 && (
+                  <div className={`grid ${j.photos.length === 1 ? "grid-cols-1" : j.photos.length === 2 ? "grid-cols-2" : "grid-cols-3"} gap-0.5 bg-border overflow-hidden`}>
+                    {j.photos.slice(0, 3).map((src, i) => (
+                      <img key={i} src={src} alt="" className="w-full h-40 md:h-48 object-cover group-hover:scale-[1.02] transition-transform duration-300" />
+                    ))}
                   </div>
-                  <button onClick={() => del(j.id)} data-testid={`journal-delete-${j.id}`} className="p-1.5 rounded-md text-muted-foreground hover:text-destructive shrink-0">
-                    <TrashIcon size={14} />
-                  </button>
+                )}
+                <div className="p-5">
+                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    <NotebookIcon size={16} weight="duotone" className="text-primary" />
+                    <div className="overline text-[10px]">{j.date} · {j.location || "—"}</div>
+                    {j.ai_generated && (
+                      <span className="inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/30">
+                        <SparkleIcon size={10} weight="fill" /> AI
+                      </span>
+                    )}
+                  </div>
+                  <div className="font-display text-xl font-bold leading-tight group-hover:text-primary transition-colors">{j.title}</div>
+                  <div className="flex flex-wrap gap-1.5 mt-3 text-[10px]">
+                    {j.weather && <span className="px-2 py-0.5 border border-border rounded-full">{j.weather}</span>}
+                    {j.mood && <span className="px-2 py-0.5 border border-border rounded-full">{j.mood}</span>}
+                    {j.companions && <span className="px-2 py-0.5 border border-border rounded-full">{j.companions}</span>}
+                    {j.distance_km > 0 && <span className="px-2 py-0.5 border border-border rounded-full number-tabular">{j.distance_km} km</span>}
+                    {j.duration_min > 0 && <span className="px-2 py-0.5 border border-border rounded-full number-tabular">{Math.floor(j.duration_min / 60)}h {j.duration_min % 60}m</span>}
+                  </div>
+                  {j.notes && <p className="text-sm text-muted-foreground mt-4 leading-relaxed line-clamp-3">{j.notes}</p>}
+                  <div className="mt-4 text-xs text-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Read full entry →</div>
                 </div>
-                <div className="flex flex-wrap gap-1.5 mt-3 text-[10px]">
-                  {j.weather && <span className="px-2 py-0.5 border border-border rounded-full">{j.weather}</span>}
-                  {j.mood && <span className="px-2 py-0.5 border border-border rounded-full">{j.mood}</span>}
-                  {j.companions && <span className="px-2 py-0.5 border border-border rounded-full">{j.companions}</span>}
-                  {j.distance_km > 0 && <span className="px-2 py-0.5 border border-border rounded-full number-tabular">{j.distance_km} km</span>}
-                  {j.duration_min > 0 && <span className="px-2 py-0.5 border border-border rounded-full number-tabular">{Math.floor(j.duration_min / 60)}h {j.duration_min % 60}m</span>}
-                </div>
-                {j.notes && <p className="text-sm text-muted-foreground mt-4 leading-relaxed line-clamp-6">{j.notes}</p>}
-              </div>
+              </Link>
             </div>
           ))}
         </div>

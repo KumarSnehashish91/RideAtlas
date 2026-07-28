@@ -35,6 +35,7 @@ User attached: `RideAtlas_PRD.pdf`, `RideAtlas_BRD.pdf`, `RideAtlas_Vision.pdf`,
 - **Service History**: log services with cost/center/notes
 - **Expenses**: per-trip budget vs spend, category breakdown, split with riders
 - **Ride Journal (AI-powered — v1.1)**: user uploads 1–3 photos + picks mood + duration + 1-line note. **Gemini 3 Flash vision** analyzes photos, infers location/weather/companions/distance and writes a ~120-word first-person narrative. Falls back to Emergent LLM key if the user's key fails.
+- **Journal Detail (v1.2)**: dedicated `/journal/:id` route with a **magazine-style long-form reader** — hero image over 68vh, sticky top bar (back / brand / delete), display-scale title, drop-cap first paragraph, left rail with location/weather/companions/mood/distance/duration, inline photo gallery with click-to-lightbox, and a signature block.
 - **Statistics**: total km, longest ride, riding days, achievements, spend pie, monthly bar chart (Recharts)
 - **Packing Checklist**: categorised items with progress bar + toggle
 

@@ -14,6 +14,7 @@ import FuelLog from "./pages/FuelLog";
 import ServiceHistory from "./pages/ServiceHistory";
 import Expenses from "./pages/Expenses";
 import Journal from "./pages/Journal";
+import JournalDetail from "./pages/JournalDetail";
 import Statistics from "./pages/Statistics";
 import Packing from "./pages/Packing";
 
@@ -48,6 +49,7 @@ export default function App() {
             <Route path="/service" element={<ServiceHistory />} />
             <Route path="/expenses" element={<Expenses />} />
             <Route path="/journal" element={<Journal />} />
+            <Route path="/journal/:id" element={<JournalDetail />} />
             <Route path="/stats" element={<Statistics />} />
             <Route path="/packing" element={<Packing />} />
           </Route>

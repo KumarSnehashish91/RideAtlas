@@ -500,6 +500,10 @@ async def list_journal(user: dict = Depends(get_current_user)):
     docs = await db.journal_entries.find({"user_id": user["id"]}, {"_id": 0}).sort("date", -1).to_list(1000)
     return docs
 
+@api.get("/journal/{entry_id}")
+async def get_journal(entry_id: str, user: dict = Depends(get_current_user)):
+    return await _get(db.journal_entries, entry_id, user["id"])
+
 @api.post("/journal")
 async def create_journal(payload: JournalCreate, user: dict = Depends(get_current_user)):
     entry = JournalEntry(**payload.model_dump(), user_id=user["id"])
