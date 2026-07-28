@@ -1,0 +1,166 @@
+{
+  "theme": "Dark-first (Premium Terrain/Atlas)",
+  "concept": "Tactical Organic / The Performance Pro mixed with Earthy",
+  "typography": {
+    "headings": {
+      "font_family": "Outfit",
+      "import_url": "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap",
+      "style": "tracking-tight, highly legible, strong character for premium tactical feel.",
+      "scales": {
+        "h1": "text-5xl sm:text-6xl font-extrabold tracking-tighter leading-none",
+        "h2": "text-3xl sm:text-4xl font-bold tracking-tight",
+        "h3": "text-xl sm:text-2xl font-semibold",
+        "h4": "text-lg font-medium"
+      }
+    },
+    "body": {
+      "font_family": "Manrope",
+      "import_url": "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap",
+      "style": "Clean, highly readable, technical feel.",
+      "scales": {
+        "large": "text-lg leading-relaxed",
+        "base": "text-base leading-normal",
+        "small": "text-sm text-muted-foreground",
+        "overline": "text-xs font-bold tracking-[0.2em] uppercase"
+      }
+    }
+  },
+  "colors": {
+    "dark": {
+      "background": "#0F1115",
+      "surface": "#16191F",
+      "surface_hover": "#1C2028",
+      "primary": "#E25822",
+      "primary_foreground": "#FFFFFF",
+      "secondary": "#2A2F3A",
+      "secondary_foreground": "#D1D5DB",
+      "accent": "#F59E0B",
+      "muted": "#232730",
+      "muted_foreground": "#8E96A4",
+      "border": "#2A2F3A",
+      "danger": "#EF4444",
+      "success": "#10B981",
+      "topographic_line": "rgba(255,255,255,0.03)"
+    },
+    "light": {
+      "background": "#F9FAFB",
+      "surface": "#FFFFFF",
+      "surface_hover": "#F3F4F6",
+      "primary": "#D04A18",
+      "primary_foreground": "#FFFFFF",
+      "secondary": "#E5E7EB",
+      "secondary_foreground": "#374151",
+      "accent": "#D97706",
+      "muted": "#F3F4F6",
+      "muted_foreground": "#6B7280",
+      "border": "#E5E7EB",
+      "danger": "#DC2626",
+      "success": "#059669",
+      "topographic_line": "rgba(0,0,0,0.03)"
+    }
+  },
+  "visual_enhancers": {
+    "shadows": {
+      "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+      "ambient": "0 8px 32px rgba(0,0,0,0.12)",
+      "glow": "0 0 16px rgba(226, 88, 34, 0.3)"
+    },
+    "borders": {
+      "radius_sm": "0.25rem",
+      "radius_md": "0.5rem",
+      "radius_lg": "0.75rem",
+      "style": "1px solid border-border (crisp, technical look)"
+    },
+    "textures": {
+      "hero_background": "Topographic map SVG pattern at 3% opacity overlaid on the background.",
+      "glass": "backdrop-blur-xl bg-background/80 border border-border"
+    }
+  },
+  "layouts": {
+    "marketing": {
+      "hero": "Asymmetric Bento Grid (Grid Mode A) with high impact typography and dark/tactical image overlays.",
+      "features": "Alternating grid with sticky content sections.",
+      "spacing": "Generous (py-24, py-32, gap-12)"
+    },
+    "app_shell": {
+      "structure": "Fixed left sidebar (desktop) / Bottom sheet or Hamburger (mobile) + Top Header with breadcrumbs/profile.",
+      "content_area": "Max-width container, dense data layout (Grid Mode B).",
+      "spacing": "Tight to moderate (p-4, p-6, gap-4, gap-6)"
+    }
+  },
+  "grids": {
+    "bento_dashboard": "grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 or gap-6. Summary cards col-span-1, primary charts col-span-2 or 3, tall lists col-span-1 row-span-2.",
+    "bento_marketing": "grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-8 or gap-12."
+  },
+  "components_strategy": {
+    "buttons": "Sharp/Slightly rounded (radius_md). Primary buttons use brand terracotta (#E25822) with hover brightness increase. Secondary buttons use ghost/outline.",
+    "cards": "Cardless or Neumorphism flat solid surface with 1px border. No soft massive shadows on dashboards.",
+    "navigation": "Sidebar with Phosphor Icons (technical, crisp). Active state highlighted with brand color left border.",
+    "inputs": "Shadcn based. Flat background, sharp borders, clear focus rings (ring-primary/30).",
+    "maps": "Leaflet.js map with CartoDB Dark Matter or customized Mapbox dark style for Trip Planner."
+  },
+  "motion": {
+    "interactions": "Hover states on all cards (border color change, subtle -translate-y-0.5).",
+    "page_transitions": "Framer motion fade and slight upward drift.",
+    "lists": "Staggered entrance animations for Feed, Logs, and Garage lists."
+  },
+  "accessibility": {
+    "contrast": "Ensure primary text meets 4.5:1. Button text is white on #E25822.",
+    "focus": "Clear focus rings on all interactive elements.",
+    "testing": "Use data-testid on all key interactive elements (e.g., 'login-submit-button', 'add-bike-button')."
+  },
+  "media_and_3d": {
+    "icons": "@phosphor-icons/react (Duotone or Regular weight for technical feel)",
+    "3d_libraries": "Not explicitly required, but Recharts should be used for Statistics.",
+    "maps_library": "react-leaflet with dark tile layer."
+  },
+  "image_urls": {
+    "marketing_hero": {
+      "url": "https://images.unsplash.com/photo-1574417462817-a4e1aa71cc78",
+      "description": "Group of people riding motorcycle on road (adventure/touring feel)"
+    },
+    "marketing_feature_1": {
+      "url": "https://images.unsplash.com/photo-1690540293130-2ca04fbf815b",
+      "description": "Two motorcyclists riding down a country road"
+    },
+    "garage_detail": {
+      "url": "https://images.unsplash.com/photo-1534755563369-ad37931ac77b",
+      "description": "Gray and black motorcycle engine"
+    },
+    "garage_empty_state": {
+      "url": "https://images.unsplash.com/photo-1650569663281-44a28c984e2a",
+      "description": "A person holding/working on a car/bike engine"
+    },
+    "trip_planner_map_overlay": {
+      "url": "https://images.pexels.com/photos/7009483/pexels-photo-7009483.jpeg",
+      "description": "Overhead view of a map with a compass"
+    },
+    "stats_background": {
+      "url": "https://images.pexels.com/photos/17955368/pexels-photo-17955368.jpeg",
+      "description": "Flat lay of a map with compasses"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Use Tailwind CSS for styling. Implement both light and dark themes using CSS variables, but design dark mode as the primary focus.",
+    "Initialize Shadcn UI for standard components using .js/.jsx extensions (e.g., no TypeScript, use Javascript).",
+    "Build standard layouts: Marketing page (HTML+Tailwind, no Shadcn wrappers), App Shell (Sidebar+Header for authenticated views).",
+    "Build the dashboard bento grid accurately. Ensure cards have 1px borders and distinct surfaces.",
+    "For the Trip Planner, integrate a Leaflet map (e.g., using react-leaflet) to show routes and waypoints.",
+    "Use Sonner for toast notifications.",
+    "Build charts using Recharts for the Statistics page and Fuel trends.",
+    "Apply topographic SVG background patterns to empty states and hero sections.",
+    "Do NOT use 'Inter' for headings. Ensure 'Outfit' and 'Manrope' fonts are properly imported and applied.",
+    "Ensure the Garage uses the provided motorcycle image URLs for primary bike cards.",
+    "Ensure all buttons, inputs, and list items have appropriate hover and focus states.",
+    "Include 'data-testid' attributes on all clickable elements."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": {
+    "avoid_ai_slop": "Do not make generic centered layouts, simplistic gradients, and uniform styling. Use asymmetrical grids when possible.",
+    "depth": "Create depth through layered design elements with z-index hierarchy and subtle glass-morphism.",
+    "transitions": "NEVER apply 'transition: all'. Apply transitions specific to properties (e.g., transition-colors, transition-transform).",
+    "alignment": "Do NOT center align the app container. Respect optical alignment.",
+    "icons": "NEVER use AI assistant emojis. Use the specified icon library (@phosphor-icons/react).",
+    "spacing": "Use 2-3x more spacing in marketing sections than feels necessary.",
+    "toasts": "Use `sonner` located in /app/src/components/ui/sonner.js or .jsx"
+  }
+}
