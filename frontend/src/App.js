@@ -25,6 +25,13 @@ function Protected() {
   return <AppShell><Outlet /></AppShell>;
 }
 
+function ProtectedFullscreen() {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">Loading…</div>;
+  if (!user) return <Navigate to="/login" replace />;
+  return <Outlet />;
+}
+
 function PublicOnly({ children }) {
   const { user, loading } = useAuth();
   if (loading) return null;
@@ -49,9 +56,12 @@ export default function App() {
             <Route path="/service" element={<ServiceHistory />} />
             <Route path="/expenses" element={<Expenses />} />
             <Route path="/journal" element={<Journal />} />
-            <Route path="/journal/:id" element={<JournalDetail />} />
             <Route path="/stats" element={<Statistics />} />
             <Route path="/packing" element={<Packing />} />
+          </Route>
+          {/* Journal detail: fullscreen reader (no sidebar chrome) */}
+          <Route element={<ProtectedFullscreen />}>
+            <Route path="/journal/:id" element={<JournalDetail />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

@@ -1,0 +1,28 @@
+{
+  "summary": "Re-test of the /journal/:id overlap/bleed-through fix. Backend: GET /api/journal/{valid_id} returns 200 with entry; GET /api/journal/{bad_id} returns 404. Frontend (Playwright, demo@rideatlas.com): (1) unauthenticated visit to /journal/:id redirects to /login; (2) after login, /journal list shows AppShell sidebar (Garage link present) and cards use data-testid=journal-open-<id>; (3) clicking a card lands on /journal/:id, JournalDetail renders with hero image, AI-narrated pill, location chip, huge title 'Dancing Through the Emerald Ghat Curves', meta strip (Where/Weather/Company/Mood/Duration/Distance) and 4 paragraphs; (4) CRITICAL bleed-through check — none of the landing terms ('Plan. Ride. Record. Remember.', 'Start your atlas', 'Delhi → Manali', 'next-ride card') are present in the DOM of the detail page; (5) AppShell sidebar links (/garage, /trips, /fuel, /service, /expenses, /stats, /packing) are NOT rendered on the detail route — only the brand link to /dashboard is (top bar); (6) 'All entries' top button returns to /journal; (7) /journal/does-not-exist renders the 404 'Off route' fullscreen empty state with a Back to Journal button and NO sidebar. Screenshots confirm the premium blog visual — dark opaque background, dominant hero, editorial column, terracotta AI-narrated pill.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "JournalDetail", "issues": ["Existing seeded demo entry has only 1 photo, so inline figure (2nd photo between paragraphs 2-3) and 'More from this ride' gallery grid could not be exercised on the live demo entry — the code paths are guarded by gallery[0]/gallery.length>1 and look correct, but were not visually verified. Main agent should verify with a multi-photo entry."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/backend_test.py", "/app/test_reports/journal_detail.png"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "JournalDetail.jsx uses window.confirm() for delete (line 51). Works but non-premium; consider a shadcn AlertDialog for design consistency (matches the 'premium blog' brief).",
+    "The root of JournalDetail is `fixed inset-0 z-30 overflow-y-auto` — this correctly kills any bleed-through from any ancestor route element, but it also means `window.scrollTo` from parent scope won't scroll the reader; the internal useEffect scroll works. Fine as-is.",
+    "Reading time heuristic (200 wpm) with Math.max(1, …) is fine but a 734-char note reports '1 min read' regardless — acceptable.",
+    "The 'New AI entry' bottom action just links back to /journal (line 300-304). Copy suggests it should open the create/generate modal — currently both bottom buttons route to /journal (duplicate action). Consider deep-linking to /journal?new=1 or similar so the AI generate dialog opens on arrival. Not a bug per the review request, flagging for polish.",
+    "pullQuote is only rendered when paragraphChunks.length > 2 (line 232). The demo entry produced 4 paragraphs via the sentence-splitter, and no <blockquote> was rendered because paragraphChunks.length===4 does satisfy >2 — but rendering only happens after i===0, verify visually with a longer narrative."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "100%", "frontend": "100%" },
+  "test_credentials": "demo@rideatlas.com / demo1234 (works — user exists in DB with journal entry id a015a4dd-6d78-4e62-9bff-446e50d060b8).",
+  "seed_data_creation": "None. Used the existing demo user and existing 'Dancing Through the Emerald Ghat Curves' entry.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Bleed-through and sidebar-on-detail regressions are fixed. /journal/:id is under ProtectedFullscreen (App.js line 63-65) — Outlet only, no AppShell. JournalDetail root is `fixed inset-0 z-30 bg-background overflow-y-auto` which guarantees opaque coverage. To exercise the inline-photo + gallery-grid + lightbox paths, create a journal entry with >=3 photos (POST /api/journal/generate multipart with multiple photos). The 'New AI entry' bottom action currently routes to /journal (not to the generate dialog) — minor UX gap.",
+  "rca of the issue": "Previously /journal/:id was wrapped in the same Protected/AppShell layout as other authed routes, and the Landing hero content was somehow leaking through (likely because the detail page did not fully cover the viewport / had transparent background above lower z stacking, allowing an underlying route or portal to show). Fix moves the route into a sibling `ProtectedFullscreen` wrapper (raw Outlet) and forces the JournalDetail root to `fixed inset-0 z-30 bg-background` so it fully replaces the viewport. Verified: no landing text or sidebar links present on /journal/:id or on /journal/does-not-exist (404 state)."
+}
