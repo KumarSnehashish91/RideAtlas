@@ -237,6 +237,8 @@ class JournalEntry(BaseModel):
     distance_km: int = 0
     duration_min: int = 0
     notes: str = ""
+    photos: List[str] = []
+    ai_generated: bool = False
     created_at: str = Field(default_factory=now_iso)
 
 class JournalCreate(BaseModel):
@@ -250,6 +252,7 @@ class JournalCreate(BaseModel):
     distance_km: int = 0
     duration_min: int = 0
     notes: str = ""
+    photos: List[str] = []
 
 class PackItem(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -508,6 +511,128 @@ async def create_journal(payload: JournalCreate, user: dict = Depends(get_curren
 @api.delete("/journal/{entry_id}")
 async def delete_journal(entry_id: str, user: dict = Depends(get_current_user)):
     return await _delete(db.journal_entries, entry_id, user["id"])
+
+
+# ------------------- AI Journal Generation (Gemini vision) -------------------
+from fastapi import UploadFile, File, Form
+import base64
+import json as _json
+import re as _re
+
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+EMERGENT_LLM_KEY = os.environ.get("EMERGENT_LLM_KEY", "")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3-flash-preview")
+
+AI_JOURNAL_SYSTEM = (
+    "You are a warm, evocative writer helping a motorcycle rider journal their ride. "
+    "You analyze the attached photos, combine them with the rider's short hints, and produce a rich first-person entry."
+)
+
+def _build_ai_prompt(mood: str, duration_min: int, note: str) -> str:
+    return (
+        "The rider has attached photo(s) from a motorcycle ride. Look at them carefully and infer everything you can — "
+        "the road/landscape, likely location, weather, time of day, whether the rider is alone or with others, and approximate distance covered.\n\n"
+        f"Rider's hints:\n- Mood: {mood or 'unspecified'}\n- Duration (minutes): {duration_min}\n- Note: {note or '(no note)'}\n\n"
+        "Return ONLY a valid JSON object (no markdown fences, no commentary) with EXACTLY these keys:\n"
+        "  title (string, short evocative title, 4–8 words),\n"
+        "  location (string, place name inferred from image; use a plausible general region like 'Himalayan foothills' if uncertain),\n"
+        "  weather (short string like '14° · overcast' or 'clear · warm'),\n"
+        "  companions (string: 'Solo' or 'With friends' or 'With group'),\n"
+        "  distance_km (integer, best-guess km ridden),\n"
+        "  narrative (string, ~120 word rich first-person paragraph about the ride, weaving in what you see).\n"
+    )
+
+def _extract_json_block(text: str) -> dict:
+    if not text:
+        return {}
+    m = _re.search(r"\{[\s\S]*\}", text)
+    if not m:
+        return {}
+    try:
+        return _json.loads(m.group(0))
+    except Exception:
+        return {}
+
+async def _call_gemini(images_b64: List[dict], prompt: str, api_key: str) -> str:
+    from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
+    chat = LlmChat(
+        api_key=api_key,
+        session_id=f"journal-{uuid.uuid4()}",
+        system_message=AI_JOURNAL_SYSTEM,
+    ).with_model("gemini", GEMINI_MODEL)
+    file_contents = [ImageContent(image_base64=img["b64"]) for img in images_b64]
+    msg = UserMessage(text=prompt, file_contents=file_contents)
+    return await chat.send_message(msg)
+
+@api.post("/journal/generate")
+async def generate_journal(
+    mood: str = Form(""),
+    duration_min: int = Form(0),
+    note: str = Form(""),
+    trip_id: str = Form(""),
+    photos: List[UploadFile] = File(...),
+    user: dict = Depends(get_current_user),
+):
+    if not photos:
+        raise HTTPException(status_code=400, detail="At least one photo required")
+    if len(photos) > 3:
+        raise HTTPException(status_code=400, detail="Max 3 photos per entry")
+
+    # Encode photos to base64 and build data URLs for storage
+    images_b64 = []
+    data_urls = []
+    for p in photos:
+        raw = await p.read()
+        if len(raw) > 6 * 1024 * 1024:
+            raise HTTPException(status_code=400, detail=f"Photo too large: {p.filename}")
+        mime = p.content_type or "image/jpeg"
+        if mime not in ("image/jpeg", "image/png", "image/webp"):
+            raise HTTPException(status_code=400, detail=f"Unsupported image type: {mime}")
+        b64 = base64.b64encode(raw).decode("utf-8")
+        images_b64.append({"b64": b64, "mime": mime})
+        data_urls.append(f"data:{mime};base64,{b64}")
+
+    prompt = _build_ai_prompt(mood, duration_min, note)
+
+    # Try user's Gemini key first, fall back to Emergent LLM key
+    text_response = None
+    last_error = None
+    for key_name, key in (("GEMINI_API_KEY", GEMINI_API_KEY), ("EMERGENT_LLM_KEY", EMERGENT_LLM_KEY)):
+        if not key:
+            continue
+        try:
+            text_response = await _call_gemini(images_b64, prompt, key)
+            logger.info("AI journal generated with %s", key_name)
+            break
+        except Exception as e:
+            last_error = f"{key_name}: {e}"
+            logger.warning("AI call failed with %s: %s", key_name, e)
+            continue
+
+    if not text_response:
+        raise HTTPException(status_code=502, detail=f"AI generation failed: {last_error or 'no key available'}")
+
+    parsed = _extract_json_block(text_response)
+
+    entry = JournalEntry(
+        user_id=user["id"],
+        trip_id=trip_id or None,
+        date=datetime.now(timezone.utc).date().isoformat(),
+        title=parsed.get("title") or "A ride to remember",
+        location=parsed.get("location") or "Unknown road",
+        weather=parsed.get("weather") or "",
+        companions=parsed.get("companions") or "Solo",
+        mood=mood or "",
+        distance_km=int(parsed.get("distance_km") or 0),
+        duration_min=int(duration_min or 0),
+        notes=parsed.get("narrative") or text_response.strip(),
+        photos=data_urls,
+        ai_generated=True,
+    )
+    doc = entry.model_dump()
+    await db.journal_entries.insert_one(doc)
+    doc.pop("_id", None)
+    return doc
 
 
 # ------------------- Packing -------------------

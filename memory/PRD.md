@@ -34,7 +34,7 @@ User attached: `RideAtlas_PRD.pdf`, `RideAtlas_BRD.pdf`, `RideAtlas_Vision.pdf`,
 - **Fuel Log**: fill-ups grouped by month, auto-computes km/L from prior odometer
 - **Service History**: log services with cost/center/notes
 - **Expenses**: per-trip budget vs spend, category breakdown, split with riders
-- **Ride Journal**: rich entries (weather/mood/companions/distance/duration/notes)
+- **Ride Journal (AI-powered — v1.1)**: user uploads 1–3 photos + picks mood + duration + 1-line note. **Gemini 3 Flash vision** analyzes photos, infers location/weather/companions/distance and writes a ~120-word first-person narrative. Falls back to Emergent LLM key if the user's key fails.
 - **Statistics**: total km, longest ride, riding days, achievements, spend pie, monthly bar chart (Recharts)
 - **Packing Checklist**: categorised items with progress bar + toggle
 
