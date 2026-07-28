@@ -93,6 +93,13 @@
 /* Leaflet dark map override */
 .leaflet-tile-pane { filter: brightness(0.85) contrast(1.05) saturate(0.9); }
 .leaflet-container { background: hsl(var(--muted)); border-radius: var(--radius); }
+/* Prevent Leaflet's default z-index from covering modals/dialogs (default 400-700 clashes with our overlay z-50) */
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom,
+.leaflet-control,
+.leaflet-container { z-index: 1; }
+.leaflet-container.leaflet-fullscreen { z-index: 1; }
 
 /* Utility */
 .number-tabular { font-variant-numeric: tabular-nums; }

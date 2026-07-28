@@ -15,6 +15,7 @@ import ServiceHistory from "./pages/ServiceHistory";
 import Expenses from "./pages/Expenses";
 import Journal from "./pages/Journal";
 import JournalDetail from "./pages/JournalDetail";
+import TripDetail from "./pages/TripDetail";
 import Statistics from "./pages/Statistics";
 import Packing from "./pages/Packing";
 
@@ -62,6 +63,7 @@ export default function App() {
           {/* Journal detail: fullscreen reader (no sidebar chrome) */}
           <Route element={<ProtectedFullscreen />}>
             <Route path="/journal/:id" element={<JournalDetail />} />
+            <Route path="/trips/:id" element={<TripDetail />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
