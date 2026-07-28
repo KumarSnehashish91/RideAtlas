@@ -269,6 +269,9 @@ class PackItemCreate(BaseModel):
 
 
 # ------------------- Startup -------------------
+DEMO_EMAIL = "demo@rideatlas.com"
+DEMO_PASSWORD = "demo1234"
+
 @app.on_event("startup")
 async def startup():
     await db.users.create_index("email", unique=True)
@@ -279,6 +282,17 @@ async def startup():
     await db.expenses.create_index("user_id")
     await db.journal_entries.create_index("user_id")
     await db.pack_items.create_index("user_id")
+    # Seed demo user (idempotent)
+    existing = await db.users.find_one({"email": DEMO_EMAIL})
+    if not existing:
+        await db.users.insert_one({
+            "id": str(uuid.uuid4()),
+            "email": DEMO_EMAIL,
+            "name": "Demo Rider",
+            "password_hash": hash_password(DEMO_PASSWORD),
+            "created_at": now_iso(),
+        })
+        logger.info("Seeded demo user %s", DEMO_EMAIL)
 
 
 # ------------------- Auth Routes -------------------
