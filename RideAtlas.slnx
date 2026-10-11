@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="RideAtlas.Api/RideAtlas.Api.csproj" />
+  <Project Path="RideAtlas.Application/RideAtlas.Application.csproj" />
+  <Project Path="RideAtlas.Domain/RideAtlas.Domain.csproj" />
+  <Project Path="RideAtlas.Infrastructure/RideAtlas.Infrastructure.csproj" />
+  <Project Path="RideAtlas.Tests/RideAtlas.Tests.csproj" />
+</Solution>

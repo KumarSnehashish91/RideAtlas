@@ -1,0 +1,16 @@
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\bin\Debug\net10.0\RideAtlas.Application.deps.json
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\bin\Debug\net10.0\RideAtlas.Application.dll
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\bin\Debug\net10.0\RideAtlas.Application.pdb
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\bin\Debug\net10.0\RideAtlas.Domain.dll
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\bin\Debug\net10.0\RideAtlas.Domain.pdb
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\obj\Debug\net10.0\RideAtlas.Application.csproj.AssemblyReference.cache
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\obj\Debug\net10.0\RideAtlas.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\obj\Debug\net10.0\RideAtlas.Application.AssemblyInfoInputs.cache
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\obj\Debug\net10.0\RideAtlas.Application.AssemblyInfo.cs
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\obj\Debug\net10.0\RideAtlas.Application.csproj.CoreCompileInputs.cache
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\obj\Debug\net10.0\RideAtlas.Application.sourcelink.json
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\obj\Debug\net10.0\RideAtla.BB0FA072.Up2Date
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\obj\Debug\net10.0\RideAtlas.Application.dll
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\obj\Debug\net10.0\refint\RideAtlas.Application.dll
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\obj\Debug\net10.0\RideAtlas.Application.pdb
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Application\obj\Debug\net10.0\ref\RideAtlas.Application.dll

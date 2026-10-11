@@ -19,9 +19,13 @@ User attached: `RideAtlas_PRD.pdf`, `RideAtlas_BRD.pdf`, `RideAtlas_Vision.pdf`,
 - Club leads (David Chen) — shared manifests, packing lists, route exports
 
 ## Architecture
-- **Backend**: FastAPI + Motor (MongoDB) + PyJWT + bcrypt. Single `server.py` with `/api` prefix. Data model is per-user (user_id filter).
+- **Backend**: FastAPI + Motor (MongoDB) + PyJWT + bcrypt. Single `server.py` with `/api` prefix. Data model is per-user (user_id filter). **Currently not run** — see "Current run mode" below.
 - **Frontend**: React 19 + React Router 7 + Tailwind + Shadcn UI + Phosphor Icons + react-leaflet + Recharts + sonner. AuthContext manages session via httpOnly cookie + Bearer fallback in localStorage.
 - **Font**: `Outfit` (headings) + `Manrope` (body). Colors: dark bg `#0F1115`, primary `#E25822` terracotta, accent `#F59E0B` amber.
+
+## Current run mode (frontend-only, no DB/API)
+- The FastAPI backend and MongoDB are not wired up for local runs. `frontend/src/lib/api.js` now points `client` at `frontend/src/lib/localBackend.js`, an in-browser mock that mirrors every `server.py` route (auth, bikes, trips, fuel, service, expenses, journal incl. AI-journal generation, packing, stats) and persists to `localStorage`.
+- To reconnect the real backend later: point `client` in `api.js` back at an axios instance hitting `REACT_APP_BACKEND_URL`, and run `backend/server.py` against a MongoDB instance with `.env` (`MONGO_URL`, `DB_NAME`, `JWT_SECRET`, `GEMINI_API_KEY`, `FRONTEND_URL`). No page/component code needs to change — they all call through `client.get/post/put/delete`.
 
 ## What's implemented (Feb 2026 — v1.0)
 - JWT auth (register/login/logout/me) with cookie + bearer
@@ -34,7 +38,7 @@ User attached: `RideAtlas_PRD.pdf`, `RideAtlas_BRD.pdf`, `RideAtlas_Vision.pdf`,
 - **Fuel Log**: fill-ups grouped by month, auto-computes km/L from prior odometer
 - **Service History**: log services with cost/center/notes
 - **Expenses**: per-trip budget vs spend, category breakdown, split with riders
-- **Ride Journal (AI-powered — v1.1)**: user uploads 1–3 photos + picks mood + duration + 1-line note. **Gemini 3 Flash vision** analyzes photos, infers location/weather/companions/distance and writes a ~120-word first-person narrative. Falls back to Emergent LLM key if the user's key fails.
+- **Ride Journal (AI-powered — v1.1)**: user uploads 1–3 photos + picks mood + duration + 1-line note. **Gemini 3 Flash vision** analyzes photos, infers location/weather/companions/distance and writes a ~120-word first-person narrative.
 - **Journal Detail (v1.2)**: dedicated `/journal/:id` route with a **magazine-style long-form reader** — hero image over 68vh, sticky top bar (back / brand / delete), display-scale title, drop-cap first paragraph, left rail with location/weather/companions/mood/distance/duration, inline photo gallery with click-to-lightbox, and a signature block.
 - **Statistics**: total km, longest ride, riding days, achievements, spend pie, monthly bar chart (Recharts)
 - **Packing Checklist**: categorised items with progress bar + toggle

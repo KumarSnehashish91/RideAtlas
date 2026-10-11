@@ -1,18 +1,14 @@
-import axios from "axios";
+import client from "./localBackend";
 
-const BASE = process.env.REACT_APP_BACKEND_URL;
-export const API = `${BASE}/api`;
-
-const client = axios.create({
-  baseURL: API,
-  withCredentials: true,
-});
-
-client.interceptors.request.use((cfg) => {
-  const token = localStorage.getItem("ra_token");
-  if (token) cfg.headers.Authorization = `Bearer ${token}`;
-  return cfg;
-});
+// RideAtlas is currently running without a live database/API — `client` is an
+// in-browser mock (see ./localBackend.js) that mirrors every route in
+// backend/server.py and persists to localStorage, so the whole app works the
+// same way it will once the real FastAPI + MongoDB backend is reconnected.
+//
+// To wire the real backend back up: replace `client` below with an axios
+// instance pointed at `${process.env.REACT_APP_BACKEND_URL}/api`. No page or
+// component needs to change — they all call through client.get/post/put/delete.
+export const API = "/api";
 
 export function formatApiError(err) {
   const d = err?.response?.data?.detail;

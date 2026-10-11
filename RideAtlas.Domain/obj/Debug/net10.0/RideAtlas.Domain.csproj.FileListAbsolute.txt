@@ -1,0 +1,12 @@
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Domain\bin\Debug\net10.0\RideAtlas.Domain.deps.json
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Domain\bin\Debug\net10.0\RideAtlas.Domain.dll
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Domain\bin\Debug\net10.0\RideAtlas.Domain.pdb
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Domain\obj\Debug\net10.0\RideAtlas.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Domain\obj\Debug\net10.0\RideAtlas.Domain.AssemblyInfoInputs.cache
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Domain\obj\Debug\net10.0\RideAtlas.Domain.AssemblyInfo.cs
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Domain\obj\Debug\net10.0\RideAtlas.Domain.csproj.CoreCompileInputs.cache
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Domain\obj\Debug\net10.0\RideAtlas.Domain.sourcelink.json
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Domain\obj\Debug\net10.0\RideAtlas.Domain.dll
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Domain\obj\Debug\net10.0\refint\RideAtlas.Domain.dll
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Domain\obj\Debug\net10.0\RideAtlas.Domain.pdb
+C:\Products\Web Applications\RideAtlas\RideAtlas\RideAtlas.Domain\obj\Debug\net10.0\ref\RideAtlas.Domain.dll

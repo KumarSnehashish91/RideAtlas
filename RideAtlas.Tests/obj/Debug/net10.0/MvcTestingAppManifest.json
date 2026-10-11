@@ -1,0 +1,6 @@
+{
+  "RideAtlas.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Products\\Web Applications\\RideAtlas\\RideAtlas\\RideAtlas.Api",
+  "RideAtlas.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Products\\Web Applications\\RideAtlas\\RideAtlas\\RideAtlas.Application",
+  "RideAtlas.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Products\\Web Applications\\RideAtlas\\RideAtlas\\RideAtlas.Domain",
+  "RideAtlas.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Products\\Web Applications\\RideAtlas\\RideAtlas\\RideAtlas.Infrastructure"
+}

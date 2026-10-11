@@ -524,7 +524,6 @@ import json as _json
 import re as _re
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
-EMERGENT_LLM_KEY = os.environ.get("EMERGENT_LLM_KEY", "")
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3-flash-preview")
 
 AI_JOURNAL_SYSTEM = (
@@ -558,15 +557,12 @@ def _extract_json_block(text: str) -> dict:
         return {}
 
 async def _call_gemini(images_b64: List[dict], prompt: str, api_key: str) -> str:
-    from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
-    chat = LlmChat(
-        api_key=api_key,
-        session_id=f"journal-{uuid.uuid4()}",
-        system_message=AI_JOURNAL_SYSTEM,
-    ).with_model("gemini", GEMINI_MODEL)
-    file_contents = [ImageContent(image_base64=img["b64"]) for img in images_b64]
-    msg = UserMessage(text=prompt, file_contents=file_contents)
-    return await chat.send_message(msg)
+    import google.generativeai as genai
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel(GEMINI_MODEL, system_instruction=AI_JOURNAL_SYSTEM)
+    parts = [{"mime_type": img["mime"], "data": img["b64"]} for img in images_b64]
+    response = await model.generate_content_async([prompt, *parts])
+    return response.text
 
 @api.post("/journal/generate")
 async def generate_journal(
@@ -598,20 +594,15 @@ async def generate_journal(
 
     prompt = _build_ai_prompt(mood, duration_min, note)
 
-    # Try user's Gemini key first, fall back to Emergent LLM key
     text_response = None
     last_error = None
-    for key_name, key in (("GEMINI_API_KEY", GEMINI_API_KEY), ("EMERGENT_LLM_KEY", EMERGENT_LLM_KEY)):
-        if not key:
-            continue
+    if GEMINI_API_KEY:
         try:
-            text_response = await _call_gemini(images_b64, prompt, key)
-            logger.info("AI journal generated with %s", key_name)
-            break
+            text_response = await _call_gemini(images_b64, prompt, GEMINI_API_KEY)
+            logger.info("AI journal generated with GEMINI_API_KEY")
         except Exception as e:
-            last_error = f"{key_name}: {e}"
-            logger.warning("AI call failed with %s: %s", key_name, e)
-            continue
+            last_error = f"GEMINI_API_KEY: {e}"
+            logger.warning("AI call failed: %s", e)
 
     if not text_response:
         raise HTTPException(status_code=502, detail=f"AI generation failed: {last_error or 'no key available'}")

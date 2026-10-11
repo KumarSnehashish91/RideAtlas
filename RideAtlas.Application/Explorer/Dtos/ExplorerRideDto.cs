@@ -1,0 +1,26 @@
+namespace RideAtlas.Application.Explorer.Dtos;
+
+public record ExplorerRideDto(
+    Guid Id,
+    string Slug,
+    string Title,
+    string Country,
+    string? State,
+    string? Region,
+    string Origin,
+    string Destination,
+    double DistanceKm,
+    double EstimatedDurationHours,
+    int RecommendedTripDays,
+    string RoadType,
+    string Difficulty,
+    string? BestSeason,
+    double ScenicRating,
+    bool PermitRequired,
+    bool CampingAllowed,
+    string? MinimumExperience,
+    string? PackingTemplate,
+    string? HeroImageUri,
+    string? AiSummary,
+    string? Highlights,
+    DateTime CreatedAt);

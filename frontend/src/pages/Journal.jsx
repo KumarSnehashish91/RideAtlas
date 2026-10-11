@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import client, { formatApiError, API } from "../lib/api";
+import client, { formatApiError } from "../lib/api";
 import { PageContainer, PageHeader, EmptyState } from "../components/Shared";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -8,7 +8,6 @@ import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from "../components/ui/dialog";
 import { PlusIcon, TrashIcon, NotebookIcon, SparkleIcon, ImageIcon, XCircleIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
-import axios from "axios";
 
 const MOODS = ["Great", "Good", "Reflective", "Tired", "Exhilarated", "Peaceful"];
 
@@ -57,11 +56,7 @@ export default function Journal() {
       fd.append("duration_min", String(duration));
       fd.append("note", note);
       files.forEach((f) => fd.append("photos", f));
-      const token = localStorage.getItem("ra_token");
-      await axios.post(`${API}/journal/generate`, fd, {
-        withCredentials: true,
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
+      await client.post("/journal/generate", fd);
       toast.success("Journal entry generated");
       setOpen(false); resetForm(); load();
     } catch (e) {
